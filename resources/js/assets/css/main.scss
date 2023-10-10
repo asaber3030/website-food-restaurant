@@ -1,0 +1,220 @@
+@import "global";
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;700;800;900&display=swap');
+
+ul {
+  padding: 0;
+}
+
+.code-font { font-family: 'Fira Code', sans-serif; font-weight: 600; }
+
+// Badges
+.badge-warning { background-color: $yellow-light; }
+.badge-error { background-color: $red-light; }
+.badge-success { background-color: $green-light; }
+.badge-primary { background-color: $blue-dark; }
+.badge { border-radius: 3px; }
+
+.app-arabic {
+  font-family: 'Tajawal', sans-serif !important;
+  padding-left: 0 !important;
+  padding-right: 16% !important;
+  // Sidebar to right
+  .app-admin-sidebar {
+    right: 0 !important;
+    left: unset !important;
+  }
+  // Resets
+  .btn:not(.remove-svg-padding) {  svg { margin-left: 5px; margin-right: 0 !important } }
+}
+
+// Bootstrap pagination
+.pagination {
+  .page-item.active { .page-link { background-color: $yellow-dark !important; color: #FFF; } }
+  .page-link {
+    background-color: #1c1c1c;
+    border: 1px solid #333;
+    color: lightgray;
+  }
+}
+
+// Application navbar
+#app-navbar {
+  @include flexBox(space-between, center);
+
+  z-index: 999;
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #222;
+  padding: 14px 150px;
+  .app-logo {
+    a {
+      display: block;
+      font-weight: 800;
+      color: lightgray;
+      font-size: 25px;
+      text-transform: uppercase;
+      position: relative;
+      &:after {
+        content: '';
+        width: 25px;
+        height: 4px;
+        background-color: $yellow-dark;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        border-radius: 5px;
+      }
+      &:first-letter {
+        color: $yellow-dark;
+        text-shadow: -5px -2px 0 $yellow-light;
+      }
+    }
+  }
+
+  .no-dropdown-links, .menu {
+    @include flexBox();
+    gap: 20px;
+    a {
+      @include transition();
+      color: #FFF;
+      &:hover { color: $yellow-dark; svg { color: $yellow-dark !important; } }
+      svg { margin-right: 5px; }
+    }
+  }
+
+  .menu {
+    gap: 25px;
+    img {
+      width: 35px;
+    }
+  }
+
+  .dropdown-menu {
+    background-color: #333;
+    width: 200px;
+  }
+}
+
+// Application page content
+.page-content {
+  padding: 14px 150px;
+  margin: 50px auto;
+}
+
+// List Sections & its items
+.food-sections {
+  .food-section {
+    &:not(:last-of-type) {
+      margin-bottom: 30px;
+
+    }
+    .food-section-title {
+      font-family: 'Young Serif', Serif;
+      letter-spacing: 3px;
+      text-align: center;
+      margin-bottom: 25px;
+      &:first-letter { color: $yellow-dark; font-weight: bold; }
+    }
+
+    .food-section-items {
+      display: grid;
+      gap: 15px;
+      grid-template-columns: repeat(4, minmax(250px, 1fr));
+    }
+  }
+}
+
+// Login & Register Forms
+.form-user {
+  width: 60%;
+  margin: auto;
+}
+
+// Shopping cart left sidebar
+.shopping-cart-left {
+  background-color: #111;
+  .food-items-cart {
+    .food-item {
+      @include flexBox(flex-start);
+      position: relative;
+      padding: 10px;
+      border-radius: 5px;
+      background-color: #222;
+      gap: 15px;
+      .remove-item {
+        position: absolute;
+        right: 10px;
+        top: 5px;
+        color: gray;
+        user-select: none;
+        cursor: pointer;
+        &:hover svg { color: #444 !important; }
+      }
+      .left-food-item {
+        flex: 1;
+        img { width: 100px; height: 100px; object-fit: contain; }
+      }
+      .right-food-item {
+        flex: 4;
+        .item-price { color: $green-dark; }
+        .item-ingredients {
+          font-size: 13px;
+          color: gray;
+        }
+        .quantity-selection {
+          @include flexBox(flex-start, center);
+          .value {
+            border-top: 1px solid #777;
+            border-bottom: 1px solid #777;
+            padding: 2px 15px;
+           }
+          .action-sign {
+            @include transition();
+            padding: 2px 8px;
+            user-select: none;
+            border: 1px solid #777;
+            color: #fff;
+            cursor: pointer;
+            &:first-of-type { border-radius: 4px 0 0 4px; }
+            &:last-of-type { border-radius: 0 4px 4px 0; }
+            &:hover { background-color: $yellow-dark; border-color: $yellow-dark }
+          }
+        }
+      }
+      &:not(:last-of-type) {
+        margin-bottom: 10px;
+        border-bottom: 1px solid #222;
+      }
+    }
+  }
+}
+
+// Floating Button
+.floating-button {
+  @include flexBox(center, center);
+  @include transition();
+  position: fixed;
+  bottom: 40px;
+  right: 40px;
+  background-color: #3e3d3d;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  span {
+    background-color: #3b7e11;
+    padding: 5px;
+    position: absolute;
+    right: -6px;
+    width: 20px;
+    top: 0;
+    border-radius: 50px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    z-index: -1;
+  }
+}

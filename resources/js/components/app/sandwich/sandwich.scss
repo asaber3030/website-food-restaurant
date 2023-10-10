@@ -1,0 +1,60 @@
+@import "../../../assets/css/global";
+
+.sandwich {
+  margin-bottom: 25px;
+  .sandwich-image {
+    img {
+      max-width: 200px;
+      height: 150px !important;
+      margin: auto;
+    }
+  }
+  .sandwich-description {
+    background-color: #222;
+    margin: 10px 0;
+    border-radius: 5px;
+    @include boxShadow(#222);
+    padding: 25px;
+    .sandwich-title {
+      font-weight: bold;
+    }
+    .sandwich-ingredients {
+      @include flexBox();
+      gap: 4px;
+      margin-bottom: 10px;
+      .ingredient {
+        padding: 5px 7px;
+        font-size: 11px;
+        background-color: #333;
+        border-radius: 4px;
+        color: gray;
+      }
+    }
+    .sandwich-price {
+      margin: 0;
+      padding: 0;
+      color: #e5e5e5
+    }
+  }
+  .sandwich-footer {
+    margin: 20px 0 0;
+    @include flexBox(center, center);
+    a {
+      @include transition();
+      @include flexBox(center, center);
+      text-align: center;
+      font-size: 17px;
+      outline: 4px solid #ddd;
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      &:hover { background-color: $yellow-dark; outline-color: $yellow-dark; }
+      &.checked {
+        user-select: none;
+        cursor: not-allowed;
+        background-color: $yellow-dark; outline-color: $yellow-dark;
+
+      }
+    }
+  }
+}
