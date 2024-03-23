@@ -11,8 +11,6 @@ const List = () => {
 
   const { orders } = usePage().props
 
-  console.log(orders)
-
   return (
     <Layout>
 
@@ -20,7 +18,7 @@ const List = () => {
 
       <ProfileLayout>
         <div className="orders-container">
-          <h3 className='orders-title-main'>My Orders <span>{orders.data.length + ` order${orders.data.length > 0 ? 's' : ''}`}</span></h3>
+          <h3 className='orders-title-main'>My Orders <span>{orders.data.length + ` order${orders.data.length > 1 ? 's' : ''}`}</span></h3>
 
           {orders.data.length > 0 ? (
             <>

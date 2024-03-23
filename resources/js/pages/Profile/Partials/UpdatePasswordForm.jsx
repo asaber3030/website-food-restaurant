@@ -5,6 +5,8 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import {useForm} from '@inertiajs/react';
 import {Transition} from '@headlessui/react';
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faSpinner} from "@fortawesome/free-solid-svg-icons";
 
 export default function UpdatePasswordForm({className}) {
   const passwordInput = useRef();
@@ -46,7 +48,7 @@ export default function UpdatePasswordForm({className}) {
         </p>
       </header>
 
-      <form onSubmit={updatePassword} className="mt-6 space-y-6">
+      <form onSubmit={updatePassword} className="mt-6 space-y-3">
         <div>
           <InputLabel for="current_password" value="Current Password"/>
 
@@ -95,7 +97,7 @@ export default function UpdatePasswordForm({className}) {
         </div>
 
         <div className="flex items-center gap-4">
-          <button processing={processing} className='btn btn-warning'>Save</button>
+          <button className='btn btn-warning flex gap-3' disabled={processing}>{processing && <FontAwesomeIcon icon={faSpinner} className='animate-spin mr-2' />} Change Password</button>
 
           <Transition
             show={recentlySuccessful}

@@ -2,7 +2,7 @@ import Navbar from "@/navs/Navbar";
 
 import { usePage } from "@inertiajs/react";
 import { useState } from "react";
-import {Alert, Snackbar} from "@mui/material";
+import { Snackbar } from "@mui/material";
 
 const Layout = ({ children }) => {
 
@@ -11,6 +11,7 @@ const Layout = ({ children }) => {
 
   return (
     <div className="app-layout">
+      <meta name="X-CSRF-TOKEN" content="{{ csrf_token() }}"/>
       {flash.message && (
         <Snackbar
           ContentProps={{

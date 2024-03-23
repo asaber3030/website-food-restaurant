@@ -1,25 +1,22 @@
 import { Link, usePage } from "@inertiajs/react";
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import { Snackbar } from "@mui/material";
-
-import Offcanvas from 'react-bootstrap/Offcanvas';
 import { NavDropdown } from "react-bootstrap";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faClose, faMinus, faPlus, faShoppingCart, faSignIn, faUserPlus} from "@fortawesome/free-solid-svg-icons";
+import { faClose, faMinus, faPlus, faShoppingCart, faSignIn, faUserPlus } from "@fortawesome/free-solid-svg-icons";
+import { APP_URL } from "@/helpers/constants";
 
 import ShoppingCartImage from '@/assets/images/shopping.png'
-import { APP_URL } from "@/helpers/constants";
+import Offcanvas from 'react-bootstrap/Offcanvas';
 
 import formatMoney from "@/helpers/functions/format-money";
 
 const Navbar = () => {
 
   const { user } = usePage().props
+
   const [shoppingCart, setShoppingCart] = useState(false)
-
   const [cartItems, updateCartItems] = useState(JSON.parse(localStorage.getItem('cart')) ?? [])
-
   const [toastStatus, setToastStatus] = useState(false)
 
   const clearCart = () => {
@@ -36,16 +33,11 @@ const Navbar = () => {
             quantity: currentItem.quantity + 1,
             price: currentItem.unitPrice * (currentItem.quantity + 1)
           }
-
         } else {
           return { ...currentItem }
         }
-
       })
     ])
-
-    console.log(cartItems)
-
   }
 
   const handleDecrease = (item) => {
@@ -55,8 +47,8 @@ const Navbar = () => {
           if (currentItem.quantity > 0) {
             return {
               ...currentItem,
-              quantity: currentItem.quantity - 1 == 0 ? 1 : --currentItem.quantity,
-              price: currentItem.quantity - 1 == 0 ? 1 * currentItem.unitPrice : currentItem.price - currentItem.unitPrice
+              quantity: currentItem.quantity - 1 === 0 ? 1 : --currentItem.quantity,
+              price: currentItem.quantity - 1 === 0 ? 1 * currentItem.unitPrice : currentItem.price - currentItem.unitPrice
             }
           }
         }
@@ -64,17 +56,14 @@ const Navbar = () => {
       })
     ])
 
-    console.log(cartItems)
     localStorage.setItem('cart', JSON.stringify(cartItems))
   }
 
   const handleRemoveItem = (item) => {
     setToastStatus(true)
     updateCartItems(items => [
-      ...items.filter(x => x.id != item.id)
+      ...items.filter(x => x.id !== item.id)
     ])
-
-    console.log(cartItems)
     localStorage.setItem('cart', JSON.stringify(cartItems))
   }
 
@@ -84,7 +73,6 @@ const Navbar = () => {
 
   return (
     <nav id="app-navbar">
-
       <Snackbar
         ContentProps={{
           sx: { backgroundColor: '#f17171', color: '#fff' }
@@ -97,7 +85,7 @@ const Navbar = () => {
       />
 
       <div className="menu">
-        <button onClick={ () => setShoppingCart(true) }><img src={ShoppingCartImage} /></button>
+        <button onClick={ () => setShoppingCart(true) }><img alt={'Shop'} src={ShoppingCartImage} /></button>
       </div>
 
       <div className="app-logo">
@@ -115,7 +103,7 @@ const Navbar = () => {
             <Link className='dropdown-item' href={route('profile.addresses.main-page')}>Addresses</Link>
             <Link className='dropdown-item' href={route('profile.orders.main')}>Orders</Link>
             <NavDropdown.Divider />
-            <Link className='dropdown-item' href="#action/3.4">Logout</Link>
+            <Link className='dropdown-item' href={route('perform-logout')}>Logout</Link>
           </NavDropdown>
         ) : (
           <ul className='no-dropdown-links'>
@@ -169,7 +157,9 @@ const Navbar = () => {
 
             </div>
           ) : (
-            <h6>Empty for now!</h6>
+            <div className='alert alert-dark alert-sm'>
+              There's no sandwiches added to cart!
+            </div>
           )}
 
         </Offcanvas.Body>

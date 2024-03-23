@@ -1,94 +1,102 @@
-import { useEffect } from 'react';
-import GuestLayout from '@/Layouts/GuestLayout';
+import {useEffect} from 'react';
+
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
-import { Head, useForm } from '@inertiajs/react';
+import {Head, useForm} from '@inertiajs/react';
+import Layout from "@/layouts/Layout";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faSpinner} from "@fortawesome/free-solid-svg-icons";
 
 export default function ResetPassword({ token, email }) {
-    const { data, setData, post, processing, errors, reset } = useForm({
-        token: token,
-        email: email,
-        password: '',
-        password_confirmation: '',
-    });
+  const {data, setData, post, processing, errors, reset} = useForm({
+    token: token,
+    email: email,
+    password: '',
+    password_confirmation: '',
+  });
 
-    useEffect(() => {
-        return () => {
-            reset('password', 'password_confirmation');
-        };
-    }, []);
-
-    const onHandleChange = (event) => {
-        setData(event.target.name, event.target.value);
+  useEffect(() => {
+    return () => {
+      reset('password', 'password_confirmation');
     };
+  }, []);
 
-    const submit = (e) => {
-        e.preventDefault();
+  const onHandleChange = (event) => {
+    setData(event.target.name, event.target.value);
+  };
 
-        post(route('password.store'));
-    };
+  const submit = (e) => {
+    e.preventDefault();
 
-    return (
-        <GuestLayout>
-            <Head title="Reset Password" />
+    post(route('password.store'));
+  };
 
-            <form onSubmit={submit}>
-                <div>
-                    <InputLabel forInput="email" value="Email" />
+  return (
+    <Layout>
+      <Head title="Reset Password"/>
 
-                    <TextInput
-                        id="email"
-                        type="email"
-                        name="email"
-                        value={data.email}
-                        className="mt-1 block w-full"
-                        autoComplete="username"
-                        handleChange={onHandleChange}
-                    />
+      <div className="reset-password">
+        <form onSubmit={submit}>
+          <div>
+            <InputLabel forInput="email" value="Email"/>
 
-                    <InputError message={errors.email} className="mt-2" />
-                </div>
+            <TextInput
+              id="email"
+              type="email"
+              name="email"
+              value={data.email}
+              className="mt-1 block w-full"
+              autoComplete="username"
+              handleChange={onHandleChange}
+            />
 
-                <div className="mt-4">
-                    <InputLabel forInput="password" value="Password" />
+            <InputError message={errors.email} className="mt-2"/>
+          </div>
 
-                    <TextInput
-                        id="password"
-                        type="password"
-                        name="password"
-                        value={data.password}
-                        className="mt-1 block w-full"
-                        autoComplete="new-password"
-                        isFocused={true}
-                        handleChange={onHandleChange}
-                    />
+          <div className="mt-4">
+            <InputLabel forInput="password" value="Password"/>
 
-                    <InputError message={errors.password} className="mt-2" />
-                </div>
+            <TextInput
+              id="password"
+              type="password"
+              name="password"
+              value={data.password}
+              className="mt-1 block w-full"
+              autoComplete="new-password"
+              isFocused={true}
+              handleChange={onHandleChange}
+            />
 
-                <div className="mt-4">
-                    <InputLabel forInput="password_confirmation" value="Confirm Password" />
+            <InputError message={errors.password} className="mt-2"/>
+          </div>
 
-                    <TextInput
-                        type="password"
-                        name="password_confirmation"
-                        value={data.password_confirmation}
-                        className="mt-1 block w-full"
-                        autoComplete="new-password"
-                        handleChange={onHandleChange}
-                    />
+          <div className="mt-4">
+            <InputLabel forInput="password_confirmation" value="Confirm Password"/>
 
-                    <InputError message={errors.password_confirmation} className="mt-2" />
-                </div>
+            <TextInput
+              type="password"
+              name="password_confirmation"
+              value={data.password_confirmation}
+              className="mt-1 block w-full"
+              autoComplete="new-password"
+              handleChange={onHandleChange}
+            />
 
-                <div className="flex items-center justify-end mt-4">
-                    <PrimaryButton className="ml-4" processing={processing}>
-                        Reset Password
-                    </PrimaryButton>
-                </div>
-            </form>
-        </GuestLayout>
-    );
+            <InputError message={errors.password_confirmation} className="mt-2"/>
+          </div>
+
+          <div className="flex items-center justify-end mt-4">
+            <button disabled={processing} type='submit' className="btn btn-warning ml-4 text-black">
+              {processing && (
+                <FontAwesomeIcon className={'mr-4 text-black animate-spin'} icon={faSpinner} />
+              )}
+              Confirm
+            </button>
+          </div>
+        </form>
+      </div>
+    </Layout>
+  );
 }

@@ -40,7 +40,6 @@ ul {
 // Application navbar
 #app-navbar {
   @include flexBox(space-between, center);
-
   z-index: 999;
   position: sticky;
   top: 0;
@@ -108,7 +107,6 @@ ul {
   .food-section {
     &:not(:last-of-type) {
       margin-bottom: 30px;
-
     }
     .food-section-title {
       font-family: 'Young Serif', Serif;
@@ -126,11 +124,6 @@ ul {
   }
 }
 
-// Login & Register Forms
-.form-user {
-  width: 60%;
-  margin: auto;
-}
 
 // Shopping cart left sidebar
 .shopping-cart-left {
@@ -217,4 +210,46 @@ ul {
     font-size: 11px;
     z-index: -1;
   }
+}
+
+%default-form {
+  width: 50%;
+  margin: 0 auto;
+}
+%default-form-title {
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 20px;
+  font-size: 35px;
+}
+
+// Login & Register Forms
+.register-form {
+  .section-image {
+    width: 75px;
+    height: 75px;
+    margin: 30px auto;
+  }
+}
+
+.form-user,
+.register-form {
+  @extend %default-form;
+  .section-title {
+    @extend %default-form-title;
+  }
+}
+
+
+.forgot-password-form {
+  @extend %default-form;
+}
+
+
+.forgot-password-status {
+  @extend %default-form;
+}
+
+.verify-email-container {
+  @extend %default-form;
 }

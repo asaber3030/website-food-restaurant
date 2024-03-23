@@ -21,7 +21,6 @@ const Sandwich = ({ sandwich, children, keyD }) => {
         </div>
         <p className="sandwich-price">{formatMoney(price)}</p>
       </div>
-
       <div className="sandwich-footer">
         {children}
       </div>

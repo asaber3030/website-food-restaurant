@@ -9,13 +9,28 @@ use App\Models\OrderItem;
 use App\Models\Section;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class AppController extends Controller {
 
+  function __construct() {
+    $this->middleware('verified');
+  }
+
+  public function performLogout() {
+    Session::flush();
+    Auth::logout();
+    return redirect('login');
+  }
+
   function home() {
+    $user = Auth::user();
     return inertia('Welcome', [
-      'sections' => Section::whereHas('sandwiches')->with('sandwiches')->get()
+      'sections' => Section::whereHas('sandwiches')->with('sandwiches')->get(),
+      'user' => $user,
     ]);
+
   }
 
   function profile() {
@@ -84,6 +99,13 @@ class AppController extends Controller {
     return abort(403);
   }
 
+  function cancelOrder(Order $order) {
+    $order->forceDelete();
+    $findX = Order::where('id', $order->id)->forceDelete();
+    message('Ordered has been cancelled!');
+    return redirect()->route('profile.orders.main');
+  }
+
   function placeOrderView() {
     return inertia('Profile/Placeorder', [
       'currentUser' => User::with('addresses')->find(auth()->id()),
@@ -106,11 +128,13 @@ class AppController extends Controller {
     $cart = $request->input('cart');
     $orderPrice = 0;
     $discountPrice = 0;
+    $qtyAll = 0;
 
     $coupon = Coupon::where('code', $request->input('coupon'))->get()->first();
 
     foreach ($cart as $key => $item) {
       $orderPrice += ($item['unitPrice'] + $item['sizesPrice'] + $item['additionsPrice']) * $item['quantity'];
+      $qtyAll += $item['quantity'];
     }
 
     $discountPrice = $coupon ? ($coupon->value / 100) * $orderPrice : $orderPrice;
@@ -118,7 +142,7 @@ class AppController extends Controller {
     $order = Order::create([
       'user' => auth()->id(),
       'total_price' => $orderPrice,
-      'total_items' => count($cart),
+      'total_items' => $qtyAll,
       'coupon' => $coupon ? $coupon->id : 1,
       'coupon_discount' => $discountPrice,
       'required_money' => $orderPrice - $discountPrice
@@ -131,5 +155,4 @@ class AppController extends Controller {
 
     return redirect()->route('profile.orders.main');
   }
-
 }

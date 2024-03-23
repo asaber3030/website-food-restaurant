@@ -9,7 +9,7 @@ import { Snackbar } from "@mui/material";
 
 const Welcome = () => {
 
-  const { sections } = usePage().props
+  const { sections, user } = usePage().props
 
   const [cart, updateCart] = useState(JSON.parse(localStorage.getItem('cart')) ?? [])
   const [toastStatus, setToastStatus] = useState(false)
@@ -34,13 +34,19 @@ const Welcome = () => {
           additionsPrice: 0,
           sizesPrice: 0,
           choosedSize: 'Small',
-          choosedAddition: 'NA'
+          choosedAddition: 0
         }
       ])
     }
 
     localStorage.setItem('cart', JSON.stringify(cart))
     setToastStatus(status => true)
+  }
+
+  const handleRemoveItem = (sandwich) => {
+    updateCart((cart) => cart.filter(x => x.id != sandwich.id))
+    setToastMessage(`Sandwich ${sandwich.name} has been removed from cart!`)
+    setToastStatus(true)
   }
 
   useEffect(() => {
@@ -72,24 +78,18 @@ const Welcome = () => {
             />
 
             <div className="food-section-items">
-
               {section.sandwiches.map(sandwich => (
-
                 <Sandwich sandwich={sandwich} keyD={sandwich.id}>
                   {cart.find(x => x.id === sandwich.id) ? (
-                    <Link className='checked'><FontAwesomeIcon icon={faCheck} /></Link>
+                    <Link href='#' onClick={ () => handleRemoveItem(sandwich) } className='checked'><FontAwesomeIcon icon={faCheck} /></Link>
                   ) : (
-                    <Link onClick={ () => handleAddItem(sandwich) } >
+                    <Link href='#' onClick={ () => handleAddItem(sandwich) } >
                       <FontAwesomeIcon icon={faPlus} />
                     </Link>
                   )}
-
                 </Sandwich>
-
               ))}
-
             </div>
-
           </div>
         ))}
 

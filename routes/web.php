@@ -8,9 +8,11 @@ use Inertia\Inertia;
 
 Route::controller(AppController::class)->group(function () {
   Route::get('/', 'home')->name('home');
+
+  Route::get('/perform-logout', 'performLogout')->name('perform-logout');
 });
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
 
   Route::controller(AppController::class)->group(function () {
 
@@ -28,12 +30,10 @@ Route::middleware('auth')->group(function () {
       });
 
       Route::group(['as' => 'orders.', 'prefix' => 'orders'], function () {
-
         Route::get('/', 'orders')->name('main');
-
         Route::get('view/{order}', 'viewOrder')->name('view');
-
-      });
+        Route::post('cancel/{order}', 'cancelOrder')->name('cancel');
+      })->middleware('verified');
 
     });
 

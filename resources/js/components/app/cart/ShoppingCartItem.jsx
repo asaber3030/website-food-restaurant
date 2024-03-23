@@ -1,7 +1,8 @@
-import {APP_URL} from "@/helpers/constants";
 import formatMoney from "@/helpers/functions/format-money";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faMinus, faPlus} from "@fortawesome/free-solid-svg-icons";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { APP_URL } from "@/helpers/constants";
 
 const CartItem = ({ item }) => {
   return (
@@ -22,7 +23,6 @@ const CartItem = ({ item }) => {
         </div>
       </div>
     </div>
-
   )
 }
 

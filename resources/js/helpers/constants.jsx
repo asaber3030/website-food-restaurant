@@ -1,14 +1,3 @@
-import {
-  faBuilding, faCheck, faCog, faEdit, faFileImport, faHandsHelping,
-  faHelmetSafety,
-  faListNumeric, faPlus,
-  faShoppingCart,
-  faSubscript, faTrash,
-  faUsers
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
-
 export const APP_URL = 'http://127.0.0.1:8000/'
 export const APP_NAME = 'INote'
 

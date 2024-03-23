@@ -6,6 +6,8 @@ import Modal from '@/Components/Modal';
 import SecondaryButton from '@/Components/SecondaryButton';
 import TextInput from '@/Components/TextInput';
 import {useForm} from '@inertiajs/react';
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faSpinner} from "@fortawesome/free-solid-svg-icons";
 
 export default function DeleteUserForm({className}) {
   const [confirmingUserDeletion, setConfirmingUserDeletion] = useState(false);
@@ -86,9 +88,7 @@ export default function DeleteUserForm({className}) {
           <div className="mt-6 flex justify-end">
             <button className="btn btn-outline-secondary" onClick={closeModal}>Cancel</button>
 
-            <button className="btn btn-danger ml-3" processing={processing}>
-              Delete Account
-            </button>
+            <button className='btn btn-danger flex gap-3 ml-2' disabled={processing}>{processing && <FontAwesomeIcon icon={faSpinner} className='animate-spin mr-2' />} Delete</button>
           </div>
         </form>
       </Modal>

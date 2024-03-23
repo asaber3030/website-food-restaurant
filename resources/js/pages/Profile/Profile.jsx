@@ -13,7 +13,6 @@ export default function Profile() {
     <Layout>
       <Head title="Profile" />
       <ProfileLayout>
-
         <UpdateProfileInformation className='default-form-section' />
         <UpdatePasswordForm className='default-form-section' />
         <DeleteUserForm className='default-form-section' />

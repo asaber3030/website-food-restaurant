@@ -1,14 +1,15 @@
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
-import {Link, useForm, usePage} from '@inertiajs/react';
-import {Transition} from '@headlessui/react';
+import { Link, useForm, usePage } from '@inertiajs/react';
+import { Transition } from '@headlessui/react';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faSpinner} from "@fortawesome/free-solid-svg-icons";
 
 export default function UpdateProfileInformation({mustVerifyEmail, status, className}) {
   const user = usePage().props.auth.user;
 
-  const {data, setData, patch, errors, processing, recentlySuccessful} = useForm({
+  const { data, setData, patch, errors, processing, recentlySuccessful } = useForm({
     name: user.name,
     email: user.email,
     phone: user.phone
@@ -30,7 +31,7 @@ export default function UpdateProfileInformation({mustVerifyEmail, status, class
         </p>
       </header>
 
-      <form onSubmit={submit} className="mt-6 space-y-6">
+      <form onSubmit={submit} className="mt-6 space-y-3">
         <div>
           <InputLabel for="name" value="Name"/>
 
@@ -102,13 +103,13 @@ export default function UpdateProfileInformation({mustVerifyEmail, status, class
         )}
 
         <div className="flex items-center gap-4">
-          <button className='btn btn-warning' processing={processing}>Save</button>
+          <button className='btn btn-warning flex gap-3' disabled={processing}>{processing && <FontAwesomeIcon icon={faSpinner} className='animate-spin mr-2' />} Save</button>
 
           <Transition
             show={recentlySuccessful}
             enterFrom="opacity-0"
             leaveTo="opacity-0"
-            className="transition ease-in-out"
+            className="transition ease-in-out flex items-center justify-center mt-2"
           >
             <p className="text-sm text-gray-600 dark:text-gray-400">Saved.</p>
           </Transition>

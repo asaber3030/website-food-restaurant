@@ -33,6 +33,19 @@ const PlaceOrder = () => {
   const [couponMsgStatus, setCouponMsgStatus] = useState(false)
   const [orderOverAll, setOrderOverAll] = useState(0)
 
+
+  console.log({currentUser})
+
+  let sum = 0;
+  let totalQuantity = 0;
+
+  let prices = cart.map(item => {
+    sum += (item.unitPrice + +item.additionsPrice + +item.sizesPrice) * +item.quantity
+    totalQuantity += +item.quantity
+  })
+
+  console.log(sum)
+
   const increaseQty = (item) => {
     setCart(items => [
       ...items.map(currentItem => {
@@ -138,7 +151,6 @@ const PlaceOrder = () => {
     cart.forEach(item => {
       setOrderOverAll(x => x + unitPrice(item.newUnitPrice, item.unitPrice) * item.quantity)
     })
-
   }, [cart])
 
   useEffect(() => {
@@ -161,7 +173,7 @@ const PlaceOrder = () => {
 
           <div className="header">
             <h4>Place Order</h4>
-            <p>{cart.length} items</p>
+            <p>{totalQuantity} items</p>
           </div>
 
           <div className="content">
@@ -169,7 +181,6 @@ const PlaceOrder = () => {
             <div className="list-cart-items">
 
               {cart.map((item, idx) => (
-
                 <div key={idx} className="cart-item">
 
                   <div className="left">
@@ -188,7 +199,8 @@ const PlaceOrder = () => {
 
                     <div className="item-details">
 
-                      <h6 className='item-title-main'>{item.name} <span>({formatMoney(item.unitPrice)})</span></h6>
+                      <h6 className='item-title-main'>{item.name}</h6>
+                      <p className='text-green-600 text-lg'>{ formatMoney(item.unitPrice) }</p>
 
                       <div className="item-additions">
                         {item.sizes.length > 0 && (
@@ -200,9 +212,9 @@ const PlaceOrder = () => {
                                 defaultValue={cart.find(x => x.id == item.id).sizesPrice}
                                 name="radio-buttons-group"
                               >
-                                {item.sizes.map(size => (
+                                {item.sizes.map((size, idx) => (
                                   <FormControlLabel
-                                    key={Math.random()}
+                                    key={idx}
                                     value={size.price} control={
                                     <Radio
                                       color='success'
@@ -224,7 +236,6 @@ const PlaceOrder = () => {
                         )}
 
                         {item.additions.length > 0 && (
-
                           <div className="addition-section">
 
                             <h6 className='addition-title'>Additions</h6>
@@ -233,13 +244,12 @@ const PlaceOrder = () => {
 
                               <RadioGroup
                                 aria-labelledby="demo-radio-buttons-group-label"
-                                defaultValue={cart.find(x => x.id == item.id).additionsPrice}
+                                defaultValue={cart.find(x => x.id == item.id).additionsPrice ?? 0}
                                 name="radio-buttons-group"
                               >
-                                <FormControlLabel value={0} control={<Radio />} label={`None`}/>
-                                {item.additions.map(add => (
+                                {item.additions.map((add, idx) => (
                                   <FormControlLabel
-                                    key={Math.random()}
+                                    key={idx}
                                     value={add.price}
                                     control={
                                       <Radio
@@ -261,17 +271,15 @@ const PlaceOrder = () => {
                         )}
                       </div>
 
-
                     </div>
 
                   </div>
 
                   <div className="right">
-                    <h6>{unitPrice(item.newUnitPrice, item.unitPrice) * item.quantity}</h6>
+                    <h6 className='font-bold text-lg'>{formatMoney((item.unitPrice + +item.additionsPrice + +item.sizesPrice) * item.quantity)}</h6>
                   </div>
 
                 </div>
-
               ))}
 
             </div>
@@ -330,7 +338,7 @@ const PlaceOrder = () => {
 
             <ul>
 
-              <li><span>Total Items</span><span>{cart.length}</span></li>
+              <li><span>Total Items</span><span>{totalQuantity}</span></li>
 
               {coupon && couponObj && (
                 <li><span>Applied Coupon</span><span>{couponObj.code} / <b className='green-c'>-{couponObj.value}%</b></span></li>
@@ -338,18 +346,18 @@ const PlaceOrder = () => {
 
               <li>
                 <span>Amount</span>
-                <span className='green-c'>{formatMoney(orderOverAll)}</span>
+                <span className='green-c'>{formatMoney(sum)}</span>
               </li>
 
               {coupon && couponObj && (
                 <>
                   <li>
                     <span>Coupon Discount value</span>
-                    <span className='green-c'>{formatMoney((couponObj.value / 100) * orderOverAll)}</span>
+                    <span className='green-c'>{formatMoney((couponObj.value / 100) * sum)}</span>
                   </li>
                   <li>
                     <span>After Discount</span>
-                    <span className='green-c'>{ orderOverAll > 0 ? formatMoney(orderOverAll - ((couponObj.value / 100) * orderOverAll)) : 0}</span>
+                    <span className='green-c'>{formatMoney((sum - (couponObj.value / 100) * sum))}</span>
                   </li>
                 </>
               )}
@@ -359,13 +367,16 @@ const PlaceOrder = () => {
           </div>
 
           <div className="submit-order">
-            {(currentUser.phone != null || currentUser.addresses.length > 0) ? (
+            {(currentUser.phone && currentUser.addresses.length !== 0) ? (
               <div className='submit-order-form-container'>
                 <button onClick={placeOrderHandler} className='btn btn-warning'>Place Order</button>
               </div>
             ) : (
-              <div className="alert alert-warning">You may haven't added your phone or your main address. <Link>Add
-                Address.</Link> <Link>Add Phone Number.</Link></div>
+              <div className="alert alert-warning">
+                You may haven't added your phone or your main address.
+                <Link href={route('profile.addresses.main-page')}> Add Address </Link>
+                <Link href={route('profile.edit')}>Add Phone Number.</Link>
+              </div>
             )}
           </div>
 

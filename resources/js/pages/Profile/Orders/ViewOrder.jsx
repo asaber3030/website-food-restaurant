@@ -2,20 +2,30 @@ import '../profile.scss'
 
 import Layout from "@/layouts/Layout";
 import ProfileLayout from "@/pages/Profile/ProfileLayout";
+import OrderStatus from "@/components/app/order/OrderStatus";
 
-import { Head, Link, usePage } from "@inertiajs/react";
+import { Head, useForm, usePage } from "@inertiajs/react";
+import { APP_URL } from "@/helpers/constants";
 import formatDate, { fullDateOptions } from "@/helpers/functions/format-date";
 import formatMoney from "@/helpers/functions/format-money";
-import { APP_URL } from "@/helpers/constants";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faCheck, faDollar, faLightbulb, faListNumeric, faPercentage, faPlus} from "@fortawesome/free-solid-svg-icons";
-import OrderStatus from "@/components/app/order/OrderStatus";
+import {faDollar, faListNumeric, faPercentage, faSpinner} from "@fortawesome/free-solid-svg-icons";
+import {useState} from "react";
 
 const ViewOrder = () => {
 
   const { order } = usePage().props
-  console.log(order)
+  const { post, processing } = useForm({
+    id: order.id
+  })
+
+  const [orderStatus, setOrderStatus] = useState(false)
+
+  const handleCancel = (e) => {
+    e.preventDefault();
+    post(route('profile.orders.cancel', order.id))
+  }
 
   return (
     <Layout>
@@ -33,7 +43,7 @@ const ViewOrder = () => {
           <div className="order-details">
             <ul>
               <li><span><FontAwesomeIcon fixedWidth={true} icon={faPercentage} /> Coupon</span> <span className='green-c'>{order.coupon.id == 1 ? 'Not Used' : <span className='green-c'>{order.coupon.code} -{order.coupon.value}%</span>}</span></li>
-              {order.coupon.id != 1 && (
+              {order.coupon.id !== 1 && (
                 <li><span><FontAwesomeIcon fixedWidth={true} icon={faDollar} /> Coupon Discount Value</span> <span className='green-c'>{formatMoney(order.coupon_discount)}</span></li>
               )}
               <li><span><FontAwesomeIcon fixedWidth={true} icon={faListNumeric} /> Number or items</span> <span className='green-c'>{order.total_items} item(s)</span></li>
@@ -43,7 +53,6 @@ const ViewOrder = () => {
           </div>
 
           <div className="list-items">
-
             {order.order_items.map(item => (
               <div className="item">
                 <div className="item-image">
@@ -57,9 +66,25 @@ const ViewOrder = () => {
                 </div>
               </div>
             ))}
-
           </div>
 
+          {order.status === 1 && (
+            <div className="cancel-order mt-2 flex gap-1">
+              {orderStatus && (
+                <form onSubmit={handleCancel}>
+                  <button type={'submit'} disabled={processing} className="btn btn-warning text-black">
+                    {processing && (
+                      <FontAwesomeIcon className={'mr-4 text-black animate-spin'} icon={faSpinner} />
+                    )}
+                    Confirm Cancel
+                  </button>
+                </form>
+              )}
+              <button onClick={ () => setOrderStatus(!orderStatus) } className="btn btn-danger">
+                Cancel Order?
+              </button>
+            </div>
+          )}
         </div>
 
       </ProfileLayout>

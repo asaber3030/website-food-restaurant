@@ -2,20 +2,19 @@ import './profile.scss'
 
 import Layout from "@/layouts/Layout";
 import ProfileLayout from "@/pages/Profile/ProfileLayout";
-
-import {useForm, usePage, Link, Head} from "@inertiajs/react";
-import InputLabel from "@/components/InputLabel";
-import TextInput from "@/components/TextInput";
 import InputError from "@/components/InputError";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faCheck} from "@fortawesome/free-solid-svg-icons";
-import {Inertia} from "@inertiajs/inertia";
+import TextInput from "@/components/TextInput";
+
+import { useForm, usePage, Head } from "@inertiajs/react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheck } from "@fortawesome/free-solid-svg-icons";
+import { Inertia } from "@inertiajs/inertia";
 
 const Addresses = () => {
 
-  const {addresses} = usePage().props
+  const { addresses } = usePage().props
 
-  const {data, setData, errors, post, recentlySuccessful} = useForm({
+  const { data, setData, errors, post, processing, reset } = useForm({
     address: '',
     governorate: ''
   })
@@ -23,10 +22,11 @@ const Addresses = () => {
   const handleAddAddress = (e) => {
     e.preventDefault();
     post(route('profile.addresses.add'))
+    reset()
   }
 
   const handleDeleteAddress = (address) => {
-    Inertia.delete(route('profile.addresses.delete'), {
+    Inertia.post(route('profile.addresses.delete'), {
       address: address
     })
   }
@@ -39,6 +39,7 @@ const Addresses = () => {
 
   return (
     <Layout>
+
       <Head title='Addresses' />
 
       <ProfileLayout>
@@ -51,28 +52,24 @@ const Addresses = () => {
             <div className="addresses">
               {addresses.map(address => (
                 <div className="address">
-                  <h6>{address.main == 1 ? <FontAwesomeIcon className='mr-2 text-success' icon={faCheck}/> : ''}
-                    <span>{address.gove}</span> - {address.address}</h6>
+                  <h6>{address.main === 1 ? <FontAwesomeIcon className='mr-2 text-success' icon={faCheck}/> : ''}
+                  <span>{address.gove}</span> - {address.address}</h6>
                   <div className="actions">
-                    <button onClick={() => Inertia.post(route('profile.addresses.delete'), {
-                      address: address.id
-                    })}>Delete
-                    </button>
-                    <button onClick={() => Inertia.post(route('profile.addresses.main'), {
-                      address: address.id
-                    })}>Main</button>
+                    <button onClick={ () => handleDeleteAddress(address.id) }>Delete</button>
+                    {address.main !== 1 && (<button onClick={ () => handleMainAddress(address.id) }>Main</button>)}
                   </div>
                 </div>
               ))}
             </div>
-          ) : (
+          ): (
             <div className="alert alert-sm alert-dark">No Addresses!</div>
           )}
 
           {addresses.length < 5 && (
             <form onSubmit={handleAddAddress}>
-              <h4 className='mt-6'>Add New Address</h4>
+              <div className='mt-6 rounded-md shadow-md mb-3 font-semibold p-2 px-4 bg-gray-800'>Add New Address</div>
               <div>
+                <label htmlFor='address'>Address</label>
                 <TextInput
                   id="address"
                   name="address"
@@ -81,10 +78,10 @@ const Addresses = () => {
                   className="mt-1 block w-3/4"
                   placeholder="Address"
                 />
-
                 <InputError message={errors.address} className="mt-2"/>
               </div>
-              <div className="mt-6">
+              <div className="mt-3">
+                <label htmlFor='governorate'>Governorate</label>
                 <TextInput
                   id="governorate"
                   name="governorate"
@@ -93,11 +90,10 @@ const Addresses = () => {
                   className="mt-1 block w-3/4"
                   placeholder="Governorate"
                 />
-
                 <InputError message={errors.governorate} className="mt-2"/>
               </div>
 
-              <button className="btn btn-warning mt-6">Save</button>
+              <button disabled={processing} className="btn btn-warning mt-3">Add Address</button>
             </form>
           )}
 
